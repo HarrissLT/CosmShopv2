@@ -1,0 +1,79 @@
+    <div id="newDebtModal" class="modal">
+        <div class="modal-content medium">
+            <span class="close-button new-debt-modal-close">×</span>
+            <h2 id="newDebtModalTitle">Tạo Phiếu Nợ Mới</h2>
+            <form id="newDebtForm">
+                <input type="hidden" id="editingDebtIdV2">
+                <fieldset>
+                    <legend>Thông Tin Khách Hàng</legend>
+                    <div class="form-group">
+                        <label for="newDebtCustomerSearch">Tìm Khách Hàng (Tên/SĐT)</label>
+                        <div class="custom-search-select-container">
+                            <div class="custom-search-input-wrapper">
+                                <input type="text" id="newDebtCustomerSearch" class="custom-search-input" placeholder="Nhập để tìm hoặc điền thủ công bên dưới">
+                                <i class="fas fa-chevron-down custom-search-arrow"></i>
+                            </div>
+                            <div id="newDebtCustomerSearchResults" class="search-results-dropdown customer-search-results"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newDebtCustomerName">Tên Khách Hàng <span class="required">*</span></label>
+                            <input type="text" id="newDebtCustomerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newDebtCustomerPhone">SĐT Khách Hàng</label>
+                            <input type="tel" id="newDebtCustomerPhone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDebtCustomerEmail">Email Khách Hàng</label>
+                        <input type="email" id="newDebtCustomerEmail">
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Thông Tin Khoản Nợ</legend>
+                     <div class="form-group">
+                        <label for="newDebtCreateDate">Ngày Tạo Phiếu Nợ <span class="required">*</span></label>
+                        <input type="date" id="newDebtCreateDate" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="newDebtProductSearch">Tìm Sản Phẩm (Tên/SKU) (Không bắt buộc)</label>
+                         <div class="custom-search-select-container">
+                            <div class="custom-search-input-wrapper">
+                                <input type="text" id="newDebtProductSearch" class="custom-search-input" placeholder="Nhập để tìm sản phẩm...">
+                                <i class="fas fa-chevron-down custom-search-arrow"></i>
+                            </div>
+                            <div id="newDebtProductSearchResults" class="search-results-dropdown"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Sản phẩm/Dịch vụ đã chọn:</label>
+                        <div id="selectedDebtProductsDisplay" style="border: 1px solid #ddd; padding: 8px; min-height: 40px; border-radius: var(--border-radius); background-color: #f9f9f9;">
+                            <!-- Các sản phẩm đã chọn sẽ hiển thị ở đây -->
+                        </div>
+                        <input type="hidden" id="newDebtProduct">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newDebtAmount">Số Tiền Nợ <span class="required">*</span></label>
+                            <input type="text" id="newDebtAmount" class="currency-input" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newDebtDueDate">Hạn Thanh Toán <span class="required">*</span></label>
+                            <input type="date" id="newDebtDueDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDebtNote">Ghi Chú Khoản Nợ</label>
+                        <textarea id="newDebtNote" rows="2" placeholder="Chi tiết thêm về khoản nợ..."></textarea>
+                    </div>
+                </fieldset>
+                <div class="form-actions">
+                    <button type="button" id="cancelNewDebtModalBtn" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" id="saveNewDebtBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Tạo Mới</button>
+                </div>
+            </form>
+        </div>
+    </div>
+

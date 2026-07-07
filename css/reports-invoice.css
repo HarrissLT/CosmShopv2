@@ -1,0 +1,183 @@
+/* Reports Section Specific Styles */
+#reportsSection .stat-card {
+    border-left-width: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+}
+#reportsSection .stat-card.success-color { background-color: rgba(40, 167, 69, 0.08); }
+#reportsSection .stat-card.danger-color { background-color: rgba(220, 53, 69, 0.08); }
+#reportsSection .stat-card.primary-color { background-color: rgba(0, 123, 255, 0.08); }
+
+
+/* Invoice Customization Section */
+.invoice-customization-layout {
+    display: flex;
+    position: relative;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.invoice-preview-container {
+    flex-grow: 1;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    background-color: #f0f2f5;
+    overflow-y: auto;
+    max-height: calc(100vh - 120px);
+    min-height: 450px;
+    transition: margin-right var(--transition-duration-medium) var(--transition-timing-smooth);
+}
+
+.invoice-settings-panel {
+    position: fixed;
+    top: 15px;
+    right: -400px; /* Điều chỉnh nếu cần để vừa với màn hình nhỏ hơn */
+    width: 340px;
+    max-width: calc(100vw - 30px);
+    max-height: 65vh;
+    height: auto;
+    padding: 15px;
+    padding-top: 45px;
+    padding-bottom: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    background-color: #fdfdfd;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    overflow-y: auto !important;
+    z-index: 1010;
+    transition: right var(--transition-duration-medium) var(--transition-timing-smooth);
+}
+
+.invoice-settings-panel.settings-panel-visible {
+    right: 15px;
+}
+
+.close-settings-panel-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--secondary-color);
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+    z-index: 10;
+}
+.close-settings-panel-btn:hover {
+    color: var(--dark-color);
+}
+
+#toggleInvoiceSettingsPanelBtn {
+    margin-left: 10px;
+}
+#toggleInvoiceSettingsPanelBtn i {
+    transition: transform var(--transition-duration-medium) var(--transition-timing-smooth);
+}
+#toggleInvoiceSettingsPanelBtn.panel-open i {
+    transform: rotate(90deg);
+}
+#toggleInvoiceSettingsPanelBtn span.button-text-desktop {
+    display: inline;
+}
+
+
+.invoice-settings-panel h3, .invoice-settings-panel h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: var(--primary-color);
+}
+.invoice-settings-panel h4 {
+    font-size: 1.05em;
+    margin-top: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+.invoice-settings-panel .form-group {
+    margin-bottom: 10px;
+}
+.invoice-settings-panel .form-group label:not(.form-check-label) {
+    font-size: 0.8em;
+    margin-bottom: 3px;
+}
+.invoice-settings-panel input[type="color"] {
+    padding: 2px;
+    height: 36px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.form-check-input {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.form-check-label {
+    vertical-align: middle;
+    font-weight: normal;
+    font-size: 0.9em;
+}
+.invoice-settings-panel hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 10px 0;
+}
+#saveInvoiceSettingsBtn {
+    width: 100%;
+    margin-top: 15px;
+}
+
+
+.invoice-preview-container > h3 {
+    margin-top: 0;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.invoice-preview-container > h3 > span {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+.invoice-preview-container > h3 > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-end;
+    align-items: center;
+}
+.invoice-preview-container > h3 > div .btn {
+    margin-left: 0;
+}
+
+.invoice-preview-container small {
+    display: block;
+    margin-bottom: 12px;
+    color: #555;
+}
+
+.invoice-settings-panel .form-group #invoiceStoreLogoUpload {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.85em;
+    display: block;
+    margin-top: 5px;
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    background-color: #fff;
+    color: var(--text-color-main);
+    line-height: 1.5;
+    transition: border-color var(--transition-duration-short) var(--transition-timing-smooth),
+                box-shadow var(--transition-duration-short) var(--transition-timing-smooth);
+}
+.invoice-settings-panel .form-group #invoiceStoreLogoUpload:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.2);
+    outline: none;
+}
+
+

@@ -1,0 +1,123 @@
+/* --- AUTH SCREEN (Đăng Nhập / Đăng Ký) --- */
+.app-hidden {
+    display: none !important;
+}
+
+.auth-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color, #d63384) 0%, #6f2c91 100%);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.auth-box {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+.auth-box h1 {
+    text-align: center;
+    font-size: 1.5em;
+    color: var(--primary-color, #d63384);
+    margin: 0 0 6px;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: #777;
+    font-size: 0.88em;
+    margin: 0 0 22px;
+}
+
+.auth-tabs {
+    display: flex;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 20px;
+}
+
+.auth-tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 10px;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #999;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.auth-tab-btn.active {
+    color: var(--primary-color, #d63384);
+    border-bottom-color: var(--primary-color, #d63384);
+}
+
+.auth-form {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.auth-form.active {
+    display: flex;
+}
+
+.auth-form label {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #555;
+    margin-top: 8px;
+}
+
+.auth-form input {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+
+.auth-form input:focus {
+    outline: none;
+    border-color: var(--primary-color, #d63384);
+    box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.15);
+}
+
+.auth-submit-btn {
+    margin-top: 18px;
+    width: 100%;
+    justify-content: center;
+    padding: 11px;
+    font-size: 1em;
+}
+
+.auth-message {
+    margin-top: 16px;
+    font-size: 0.85em;
+    text-align: center;
+    min-height: 1.2em;
+}
+
+.auth-message.error { color: #dc3545; }
+.auth-message.success { color: #198754; }
+
+.auth-loading {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0.85em;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}

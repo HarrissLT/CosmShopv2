@@ -1,0 +1,157 @@
+    <div id="orderModal" class="modal">
+        <div class="modal-content large">
+            <span class="close-button">×</span>
+            <h2 id="orderModalTitleElem">Tạo Đơn Hàng Mới</h2>
+            <form id="orderForm">
+                <input type="hidden" id="orderId">
+                <input type="hidden" id="selectedCustomerIdOrderForm">
+
+                <div class="order-form-columns">
+                    <div class="order-form-column">
+                        <fieldset>
+                            <legend><i class="fas fa-user-circle"></i> Thông Tin Khách Hàng</legend>
+                            <div class="form-group">
+                                <label for="orderCustomerSearch">Tìm/Thêm Khách Hàng <span class="required">*</span></label>
+                                <div class="custom-search-select-container">
+                                    <div class="custom-search-input-wrapper">
+                                        <input type="text" id="orderCustomerSearch" class="custom-search-input" placeholder="Nhập tên hoặc SĐT để tìm/thêm mới">
+                                        <i class="fas fa-chevron-down custom-search-arrow"></i>
+                                    </div>
+                                    <div id="orderCustomerSearchResults" class="search-results-dropdown customer-search-results"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerNameOrderForm">Tên Khách Hàng <span class="required">*</span></label>
+                                <input type="text" id="customerNameOrderForm" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerPhoneOrderForm">Số Điện Thoại</label>
+                                <input type="tel" id="customerPhoneOrderForm">
+                            </div>
+                             <div class="form-group">
+                                <label for="customerEmailOrderForm">Email</label>
+                                <input type="email" id="customerEmailOrderForm">
+                            </div>
+                            <div class="form-group">
+                                <label for="customerAddressOrderForm">Địa Chỉ Giao Hàng</label>
+                                <textarea id="customerAddressOrderForm" rows="2"></textarea>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend><i class="fas fa-money-check-alt"></i> Thanh Toán & Vận Chuyển</legend>
+                             <div class="form-group">
+                                <label for="orderCreatedAtModal">Ngày Tạo Đơn Hàng</label>
+                                <input type="datetime-local" id="orderCreatedAtModal">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="orderPaymentMethod">Phương Thức TT <span class="required">*</span></label>
+                                    <select id="orderPaymentMethod" required>
+                                        <option value="cod">COD (Thu hộ)</option>
+                                        <option value="bank_transfer">Chuyển khoản</option>
+                                        <option value="cash">Tiền mặt (tại cửa hàng)</option>
+                                        <option value="debt">Ghi nợ</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="orderStatusModal">Trạng Thái ĐH <span class="required">*</span></label>
+                                    <select id="orderStatusModal" required>
+                                        <option value="pending_confirmation">Chờ xác nhận</option>
+                                        <option value="processing">Đang xử lý</option>
+                                        <option value="shipping">Đang giao</option>
+                                        <option value="delivered">Đã giao</option>
+                                        <option value="completed">Đã hoàn thành</option>
+                                        <option value="cancelled">Đã hủy</option>
+                                        <option value="returned">Đã trả hàng</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Payment Status Choice (Phương án 2) -->
+                            <div class="form-group">
+                                <label>Hình thức thanh toán:</label>
+                                <div style="display: flex; align-items: center; gap: 15px; margin-top: 5px;">
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="radio" id="paymentStatusFull" name="paymentStatusChoice" value="full" checked style="width: auto; margin-right: 5px;">
+                                        <label for="paymentStatusFull" style="font-weight: normal; margin-bottom: 0;">Trả đủ</label>
+                                    </div>
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="radio" id="paymentStatusPartialDebt" name="paymentStatusChoice" value="partial_debt" style="width: auto; margin-right: 5px;">
+                                        <label for="paymentStatusPartialDebt" style="font-weight: normal; margin-bottom: 0;">Ghi nợ (một phần/toàn bộ)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Payment Status Choice -->
+
+                             <div class="form-group">
+                                <label for="orderAmountPaid">Số Tiền Khách Đã Trả</label>
+                                <input type="text" id="orderAmountPaid" class="currency-input" placeholder="0">
+                            </div>
+
+                            <div id="orderDueDateGroup" class="form-group" style="display:none;">
+                                <label for="orderDebtDueDate">Hạn Thanh Toán Nợ</label>
+                                <input type="date" id="orderDebtDueDate">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="orderNotes">Ghi Chú (cho Shop)</label>
+                                <textarea id="orderNotes" rows="2" placeholder="VD: Khách dặn giao giờ HC..."></textarea>
+                            </div>
+                             <div class="form-group">
+                                <label for="orderCustomerNotes">Ghi Chú (cho Khách)</label>
+                                <textarea id="orderCustomerNotes" rows="2" placeholder="VD: Cảm ơn quý khách... (sẽ in ra hóa đơn nếu có)"></textarea>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="order-form-column">
+                        <fieldset>
+                            <legend><i class="fas fa-boxes"></i> Sản Phẩm Đã Chọn</legend>
+                            <div class="form-group">
+                                <label for="orderProductSearch">Thêm Sản Phẩm</label>
+                                <div class="custom-search-select-container">
+                                     <div class="custom-search-input-wrapper">
+                                        <input type="text" id="orderProductSearch" class="custom-search-input" placeholder="Tìm sản phẩm theo tên hoặc SKU">
+                                        <i class="fas fa-chevron-down custom-search-arrow"></i>
+                                    </div>
+                                    <div id="orderProductSearchResults" class="search-results-dropdown"></div>
+                                </div>
+                            </div>
+                            <div id="orderItemsList" class="order-items-list">
+                                <!-- Selected items will be here -->
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend><i class="fas fa-calculator"></i> Tổng Cộng Đơn Hàng</legend>
+                            <div class="summary-row">
+                                <span>Tổng tiền hàng:</span>
+                                <span id="orderSubtotal">0đ</span>
+                            </div>
+                            <div class="summary-row-input">
+                                <label for="orderDiscount">Giảm giá ĐH (Số tiền hoặc %):</label>
+                                <input type="text" id="orderDiscount" placeholder="VD: 50000 hoặc 10%">
+                            </div>
+                            <div class="summary-row-input">
+                                <label for="orderShippingFee">Phí vận chuyển:</label>
+                                <input type="text" id="orderShippingFee" class="currency-input" placeholder="0">
+                            </div>
+                            <div class="summary-row total">
+                                <span>THÀNH TIỀN:</span>
+                                <span id="orderTotalAmount">0đ</span>
+                            </div>
+                             <div class="summary-row" id="orderRemainingAmountRow" style="display: none; color: var(--danger-color); font-weight: bold;">
+                                <span>Còn lại phải thu:</span>
+                                <span id="orderRemainingAmount">0đ</span>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelOrderModalBtn" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" id="saveOrderBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Tạo Đơn</button>
+                </div>
+            </form>
+        </div>
+    </div>
+

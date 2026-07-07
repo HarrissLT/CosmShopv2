@@ -1,0 +1,41 @@
+/* --- BACKUP & RESTORE (tính năng mới) --- */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    text-align: left;
+}
+header h1 {
+    flex: 1;
+    text-align: left;
+}
+.header-backup-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.header-backup-actions .btn {
+    font-size: 0.85em;
+    padding: 8px 14px;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    header {
+        justify-content: center;
+        text-align: center;
+    }
+    header h1 {
+        text-align: center;
+        flex-basis: 100%;
+    }
+    .header-backup-actions {
+        justify-content: center;
+        flex-basis: 100%;
+    }
+    .header-backup-actions .btn span.button-text-desktop {
+        display: none; /* chỉ hiện icon trên màn hình nhỏ, đỡ chật */
+    }
+}

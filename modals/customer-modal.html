@@ -1,0 +1,115 @@
+    <div id="customerModal" class="modal">
+        <div class="modal-content large">
+            <span class="close-button">×</span>
+            <h2 id="customerModalTitleElem">Thêm Khách Hàng Mới</h2>
+
+            <div class="modal-tabs">
+                <button class="tab-link active" data-tab="customerInfoTab"><i class="fas fa-user-edit"></i> Thông Tin Cơ Bản</button>
+                <button class="tab-link" data-tab="customerHistoryTab"><i class="fas fa-history"></i> Lịch Sử & Thống Kê</button>
+                <button class="tab-link" data-tab="customerInteractionsTab"><i class="fas fa-comments"></i> Ghi Chú Tương Tác</button>
+            </div>
+
+            <div id="customerInfoTab" class="tab-content active">
+                <form id="customerForm">
+                    <input type="hidden" id="customerId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="custModalName">Tên Khách Hàng <span class="required">*</span></label>
+                            <input type="text" id="custModalName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="custModalPhone">Số Điện Thoại</label>
+                            <input type="tel" id="custModalPhone">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="custModalEmail">Email</label>
+                            <input type="email" id="custModalEmail">
+                        </div>
+                        <div class="form-group">
+                            <label for="custModalDob">Ngày Sinh</label>
+                            <input type="date" id="custModalDob">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="custModalAddress">Địa Chỉ</label>
+                        <textarea id="custModalAddress" rows="2"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="custModalGroup">Nhóm Khách Hàng</label>
+                            <select id="custModalGroup">
+                                <option value="new">Khách mới</option>
+                                <option value="regular">Khách thường</option>
+                                <option value="vip">Khách VIP</option>
+                                <option value="wholesale">Khách sỉ</option>
+                                <option value="blocked">Đã chặn</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="custModalSource">Nguồn Khách</label>
+                            <input type="text" id="custModalSource" placeholder="VD: Facebook, Zalo, Giới thiệu...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="custModalPersonalNotes">Ghi Chú Cá Nhân (chỉ Shop thấy)</label>
+                        <textarea id="custModalPersonalNotes" rows="2" placeholder="Sở thích, lưu ý đặc biệt..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="cancelCustomerModalBtn" class="btn btn-secondary">Hủy</button>
+                        <button type="submit" id="saveCustomerBtn" class="btn btn-primary"><i class="fas fa-user-plus"></i> Thêm KH</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="customerHistoryTab" class="tab-content">
+                <h4>Thống Kê Mua Hàng</h4>
+                <div class="customer-stats-modal" style="margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-radius: var(--border-radius);">
+                    <p>Tổng chi tiêu (LTV): <strong id="customerLTVDisplay">0đ</strong></p>
+                    <p>Tổng số đơn hoàn thành: <strong id="customerTotalOrdersDisplay">0</strong></p>
+                    <p>Giá trị trung bình/đơn: <strong id="customerAvgOrderValueDisplay">0đ</strong></p>
+                    <p>Tần suất mua hàng TB: <strong id="customerPurchaseFrequencyDisplay">N/A</strong></p>
+                    <p>Lần mua cuối: <strong id="customerLastPurchaseDateDisplay">N/A</strong></p>
+                </div>
+                <h4>Lịch Sử Đơn Hàng</h4>
+                <div id="customerOrderHistoryList" class="modal-list">
+                    <!-- Customer order history will be here -->
+                </div>
+            </div>
+
+            <div id="customerInteractionsTab" class="tab-content">
+                <h4>Thêm Ghi Chú Tương Tác Mới</h4>
+                <form id="customerInteractionForm">
+                    <input type="hidden" id="interactionCustomerId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="interactionDate">Ngày Tương Tác</label>
+                            <input type="datetime-local" id="interactionDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="interactionChannel">Kênh Tương Tác</label>
+                            <select id="interactionChannel" required>
+                                <option value="phone">Điện thoại</option>
+                                <option value="email">Email</option>
+                                <option value="zalo">Zalo</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="in_person">Gặp trực tiếp</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="interactionNotes">Nội Dung Tương Tác</label>
+                        <textarea id="interactionNotes" rows="3" required placeholder="Chi tiết cuộc gọi, tin nhắn, yêu cầu..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Lưu Tương Tác</button>
+                </form>
+                <h4 style="margin-top: 20px;">Lịch Sử Tương Tác</h4>
+                <div id="customerInteractionHistoryList" class="modal-list">
+                    <!-- Customer interaction history will be here -->
+                </div>
+            </div>
+        </div>
+    </div>
+

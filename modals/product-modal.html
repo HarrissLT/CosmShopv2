@@ -1,0 +1,102 @@
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">×</span>
+            <h2 id="productModalTitleElem">Thêm Sản Phẩm Mới</h2>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">Tên Sản Phẩm <span class="required">*</span></label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productSKU">SKU <button type="button" id="generateSKU" class="btn btn-sm btn-secondary"><i class="fas fa-barcode"></i> Tạo SKU</button></label>
+                        <input type="text" id="productSKU">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Mô Tả</label>
+                    <textarea id="productDescription" rows="2"></textarea>
+                </div>
+                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="productCostPrice">Giá Nhập <span class="required">*</span></label>
+                        <input type="text" id="productCostPrice" class="currency-input" placeholder="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Giá Bán Lẻ <span class="required">*</span></label>
+                        <input type="text" id="productPrice" class="currency-input" placeholder="0" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                     <div class="form-group">
+                        <label for="productWholesalePrice">Giá Bán Sỉ</label>
+                        <input type="text" id="productWholesalePrice" class="currency-input" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="productPromoPrice">Giá Khuyến Mãi</label>
+                        <input type="text" id="productPromoPrice" class="currency-input" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productStock">Tồn Kho</label>
+                        <input type="number" id="productStock" placeholder="Để trống nếu không quản lý" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="productLowStockThreshold">Ngưỡng báo sắp hết hàng</label>
+                        <input type="number" id="productLowStockThreshold" value="5" min="0">
+                    </div>
+                </div>
+                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="productCategory">Danh Mục</label>
+                        <input type="text" id="productCategory" placeholder="VD: Son môi, Kem chống nắng">
+                    </div>
+                    <div class="form-group">
+                        <label for="productBrand">Thương Hiệu</label>
+                        <input type="text" id="productBrand" placeholder="VD: Black Rouge, Innisfree">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productUnitSelect">Đơn vị tính</label>
+                        <select id="productUnitSelect">
+                            <option value="">-- Chọn đơn vị --</option>
+                            <option value="Cái">Cái</option>
+                            <option value="Hộp">Hộp</option>
+                            <option value="Chai">Chai</option>
+                            <option value="Tuýp">Tuýp</option>
+                            <option value="Lọ">Lọ</option>
+                            <option value="Bộ">Bộ</option>
+                            <option value="Kg">Kg</option>
+                            <option value="Gram">Gram</option>
+                            <option value="Lít">Lít</option>
+                            <option value="Ml">Ml</option>
+                            <option value="_custom_">Khác (nhập)</option>
+                        </select>
+                        <input type="text" id="productUnitCustom" placeholder="Nhập đơn vị khác" style="display:none; margin-top: 5px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="productModalStatus">Trạng thái bán</label>
+                        <select id="productModalStatus">
+                            <option value="active">Đang bán</option>
+                            <option value="inactive">Ngừng bán</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="productImageUpload">Hình Ảnh Sản Phẩm (Tối đa 5 ảnh, mỗi ảnh < 2MB)</label>
+                    <input type="file" id="productImageUpload" multiple accept="image/*">
+                    <div id="imagePreviewContainer" class="image-preview-container">
+                        <!-- Image previews will be here -->
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelProductModalBtn" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu Sản Phẩm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+

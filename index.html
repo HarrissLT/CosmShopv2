@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quản Lý Bán Hàng Mini</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/order-customer.css">
+    <link rel="stylesheet" href="css/debt.css">
+    <link rel="stylesheet" href="css/finance-dashboard.css">
+    <link rel="stylesheet" href="css/reports-invoice.css">
+    <link rel="stylesheet" href="css/toast-fullscreen.css">
+    <link rel="stylesheet" href="css/responsive-print.css">
+    <link rel="stylesheet" href="css/backup-feature.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-box">
+            <h1><i class="fas fa-store"></i> Quản Lý Bán Hàng Mini</h1>
+            <p class="auth-subtitle">Đăng nhập để dữ liệu của bạn được lưu an toàn trên đám mây (Supabase).</p>
+
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab-btn active" data-tab="login">Đăng Nhập</button>
+                <button type="button" class="auth-tab-btn" data-tab="register">Đăng Ký</button>
+            </div>
+
+            <form id="loginForm" class="auth-form active">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" required autocomplete="email" placeholder="ban@vidu.com">
+                <label for="loginPassword">Mật khẩu</label>
+                <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••">
+                <button type="submit" class="btn btn-primary auth-submit-btn"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</button>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" required autocomplete="email" placeholder="ban@vidu.com">
+                <label for="registerPassword">Mật khẩu (tối thiểu 6 ký tự)</label>
+                <input type="password" id="registerPassword" required minlength="6" autocomplete="new-password" placeholder="••••••••">
+                <label for="registerPasswordConfirm">Nhập lại mật khẩu</label>
+                <input type="password" id="registerPasswordConfirm" required minlength="6" autocomplete="new-password" placeholder="••••••••">
+                <button type="submit" class="btn btn-primary auth-submit-btn"><i class="fas fa-user-plus"></i> Tạo Tài Khoản</button>
+            </form>
+
+            <div id="authMessage" class="auth-message"></div>
+            <div id="authLoading" class="auth-loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Đang xử lý...</div>
+        </div>
+    </div>
+
+    <div class="container app-hidden" id="appContainer">
+        <header>
+            <h1><i class="fas fa-store"></i> Quản Lý Bán Hàng Mini</h1>
+            <div class="header-backup-actions">
+                <button id="exportBackupBtn" class="btn btn-secondary" title="Tải file sao lưu toàn bộ dữ liệu (JSON)"><i class="fas fa-cloud-download-alt"></i> <span class="button-text-desktop">Sao Lưu Dữ Liệu</span></button>
+                <button id="importBackupBtn" class="btn btn-secondary" title="Khôi phục dữ liệu từ file sao lưu (JSON)"><i class="fas fa-cloud-upload-alt"></i> <span class="button-text-desktop">Khôi Phục</span></button>
+                <input type="file" id="restoreBackupFile" accept="application/json" style="display:none;">
+                <button id="logoutBtn" class="btn btn-secondary" title="Đăng xuất"><i class="fas fa-sign-out-alt"></i> <span class="button-text-desktop">Đăng Xuất</span></button>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <button class="nav-btn active" data-section="dashboardSection"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+            <button class="nav-btn" data-section="productsSection"><i class="fas fa-box-open"></i> Sản Phẩm</button>
+            <button class="nav-btn" data-section="ordersSection"><i class="fas fa-receipt"></i> Đơn Hàng</button>
+            <button class="nav-btn" data-section="customersSection"><i class="fas fa-users"></i> Khách Hàng</button>
+            <button class="nav-btn" data-section="debtsSection"><i class="fas fa-hand-holding-usd"></i> Sổ Nợ Mới</button>
+            <button class="nav-btn" data-section="financeSection"><i class="fas fa-chart-line"></i> Tài Chính</button>
+            <button class="nav-btn" data-section="reportsSection"><i class="fas fa-chart-pie"></i> Báo Cáo</button>
+            <button class="nav-btn" data-section="invoiceSettingsSection"><i class="fas fa-file-invoice"></i> Cài Đặt Hóa Đơn</button>
+        </nav>
+
+        <!-- Dashboard Section -->
+        <section id="dashboardSection" class="page-section active-section">
+            <div class="dashboard-row">
+                <div class="dashboard-section-title">
+                    <h3><i class="fas fa-bolt"></i> Tác Vụ Nhanh</h3>
+                </div>
+                <div class="quick-actions">
+                    <div class="action-card products-action" data-section="productsSection" data-action="addProduct">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Thêm Sản Phẩm</span>
+                    </div>
+                    <div class="action-card orders-action" data-section="ordersSection" data-action="createOrder">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Tạo Đơn Hàng</span>
+                    </div>
+                    <div class="action-card customers-action" data-section="customersSection" data-action="addCustomer">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Thêm Khách Hàng</span>
+                    </div>
+                    <div class="action-card debts-action" data-section="debtsSection" data-action="addNewDebt">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Tạo Phiếu Nợ</span>
+                    </div>
+                     <div class="action-card finance-action" data-section="financeSection" data-action="addTransaction">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span>Thêm Giao Dịch TC</span>
+                    </div>
+                    <div class="action-card invoice-action" data-section="invoiceSettingsSection">
+                        <i class="fas fa-print"></i>
+                        <span>In & Cài Đặt HĐ</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="productsSection" class="page-section">
+            <div class="section-header">
+                <h2><i class="fas fa-box-open"></i> Quản Lý Sản Phẩm</h2>
+                <div> <!-- Bọc các nút trong một div để dễ dàng sắp xếp -->
+                    <button id="importProductsBtn" class="btn btn-success" style="margin-right: 10px;"><i class="fas fa-file-import"></i> Import SP Hàng Loạt</button>
+                    <input type="file" id="productImportFile" accept=".csv, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none;"> <!-- Input file ẩn -->
+                    <button id="addProductBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Thêm Sản Phẩm</button>
+                </div>
+            </div>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="productSearchInput"><i class="fas fa-search"></i> Tìm kiếm:</label>
+                    <input type="text" id="productSearchInput" placeholder="Tên, SKU, mô tả...">
+                </div>
+                <div class="filter-group">
+                    <label for="productCategoryFilter"><i class="fas fa-tags"></i> Danh mục:</label>
+                    <select id="productCategoryFilter">
+                        <option value="">Tất cả Danh mục</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="productStockStatusFilter"><i class="fas fa-cubes"></i> Tồn kho:</label>
+                    <select id="productStockStatusFilter">
+                        <option value="">Tất cả</option>
+                        <option value="in_stock">Còn hàng</option>
+                        <option value="low_stock">Sắp hết hàng</option>
+                        <option value="out_of_stock">Hết hàng</option>
+                        <option value="not_managed">Không QL Tồn Kho</option>
+                    </select>
+                </div>
+                <div class="filter-group price-filter">
+                    <label><i class="fas fa-dollar-sign"></i> Giá bán:</label>
+                    <input type="text" id="productMinPriceFilter" class="currency-input" placeholder="Từ">
+                    <span>-</span>
+                    <input type="text" id="productMaxPriceFilter" class="currency-input" placeholder="Đến">
+                </div>
+                 <div class="filter-group">
+                    <label for="productStatusFilter"><i class="fas fa-toggle-on"></i> Trạng thái:</label>
+                    <select id="productStatusFilter">
+                        <option value="">Tất cả</option>
+                        <option value="active">Đang bán</option>
+                        <option value="inactive">Ngừng bán</option>
+                    </select>
+                </div>
+                <button id="applyProductFiltersBtn" class="btn btn-info btn-sm"><i class="fas fa-filter"></i> Lọc</button>
+                <button id="resetProductFiltersBtn" class="btn btn-secondary btn-sm"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+            <div id="productList" class="product-list-container">
+                <!-- Product cards will be rendered here -->
+            </div>
+             <div class="no-products" style="display: none;">
+                <i class="fas fa-boxes" style="font-size: 2.5em; color: #ccc; display: block; margin-bottom: 10px;"></i>
+                <p>Chưa có sản phẩm nào. Hãy thêm sản phẩm mới!</p>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section id="ordersSection" class="page-section">
+            <div class="section-header">
+                <h2><i class="fas fa-receipt"></i> Quản Lý Đơn Hàng</h2>
+                <button id="createOrderBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Tạo Đơn Hàng</button>
+            </div>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="orderSearchInput"><i class="fas fa-search"></i> Tìm kiếm:</label>
+                    <input type="text" id="orderSearchInput" placeholder="Mã ĐH, Tên KH, SĐT...">
+                </div>
+                <div class="filter-group">
+                    <label for="orderStatusFilter"><i class="fas fa-check-circle"></i> Trạng thái:</label>
+                    <select id="orderStatusFilter">
+                        <option value="">Tất cả</option>
+                        <option value="pending_confirmation">Chờ xác nhận</option>
+                        <option value="processing">Đang xử lý</option>
+                        <option value="shipping">Đang giao</option>
+                        <option value="delivered">Đã giao</option>
+                        <option value="completed">Đã hoàn thành</option>
+                        <option value="cancelled">Đã hủy</option>
+                        <option value="returned">Đã trả hàng</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-calendar-alt"></i> Ngày tạo:</label>
+                    <input type="date" id="orderDateFromFilter">
+                    <span>-</span>
+                    <input type="date" id="orderDateToFilter">
+                </div>
+                <button id="applyOrderFiltersBtn" class="btn btn-info btn-sm"><i class="fas fa-filter"></i> Lọc</button>
+                <button id="resetOrderFiltersBtn" class="btn btn-secondary btn-sm"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+            <div id="orderListContainer">
+                <!-- Order cards will be rendered here -->
+            </div>
+            <div class="no-orders" style="display: none;">
+                <i class="fas fa-file-alt" style="font-size: 2.5em; color: #ccc; display: block; margin-bottom: 10px;"></i>
+                <p>Chưa có đơn hàng nào. Hãy tạo đơn hàng mới!</p>
+            </div>
+        </section>
+
+        <!-- Customers Section -->
+        <section id="customersSection" class="page-section">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> Quản Lý Khách Hàng</h2>
+                <button id="addCustomerBtn" class="btn btn-primary"><i class="fas fa-user-plus"></i> Thêm Khách Hàng</button>
+            </div>
+            <div class="filters">
+                 <div class="filter-group">
+                    <label for="customerSearchInput"><i class="fas fa-search"></i> Tìm kiếm:</label>
+                    <input type="text" id="customerSearchInput" placeholder="Tên, SĐT, Email...">
+                </div>
+                <div class="filter-group">
+                    <label for="customerGroupFilter"><i class="fas fa-layer-group"></i> Nhóm KH:</label>
+                    <select id="customerGroupFilter">
+                        <option value="">Tất cả</option>
+                        <option value="new">Khách mới</option>
+                        <option value="regular">Khách thường</option>
+                        <option value="vip">Khách VIP</option>
+                        <option value="wholesale">Khách sỉ</option>
+                        <option value="blocked">Đã chặn</option>
+                    </select>
+                </div>
+                <div class="filter-group price-filter">
+                    <label><i class="fas fa-dollar-sign"></i> Tổng chi:</label>
+                    <input type="text" id="customerTotalSpentMin" class="currency-input" placeholder="Từ">
+                    <span>-</span>
+                    <input type="text" id="customerTotalSpentMax" class="currency-input" placeholder="Đến">
+                </div>
+                <button id="applyCustomerFiltersBtn" class="btn btn-info btn-sm"><i class="fas fa-filter"></i> Lọc</button>
+                <button id="resetCustomerFiltersBtn" class="btn btn-secondary btn-sm"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+            <div class="stats-bar">
+                <span>Tổng số khách hàng: <strong id="totalCustomerCount">0</strong></span>
+            </div>
+            <div id="customerListContainer">
+                <!-- Customer cards will be rendered here -->
+            </div>
+            <div class="no-customers" style="display: none;">
+                <i class="fas fa-user-friends" style="font-size: 2.5em; color: #ccc; display: block; margin-bottom: 10px;"></i>
+                <p>Chưa có khách hàng nào. Hãy thêm khách hàng mới!</p>
+            </div>
+        </section>
+
+        <!-- New Debt Management Section -->
+        <section id="debtsSection" class="page-section">
+            <div class="debt-management-container">
+                <div class="debt-header">
+                    <div class="debt-header-title">
+                        <h1><i class="fas fa-book"></i> Quản Lý Sổ Nợ (Mới)</h1>
+                        <p>Theo dõi và quản lý các khoản nợ của khách hàng chi tiết hơn.</p>
+                    </div>
+                    <button id="addNewDebtBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Tạo Phiếu Nợ Mới</button>
+                </div>
+
+                <div class="debt-summary-cards">
+                    <div class="summary-card debt-total-remaining">
+                        <div>
+                            <div class="summary-label">Tổng Nợ Còn Lại</div>
+                            <div class="summary-value" id="debtTotalRemainingV2">0đ</div>
+                        </div>
+                        <i class="fas fa-hourglass-half summary-icon"></i>
+                    </div>
+                    <div class="summary-card debt-total-paid">
+                        <div>
+                            <div class="summary-label">Tổng Đã Thanh Toán</div>
+                            <div class="summary-value" id="debtTotalPaidV2">0đ</div>
+                        </div>
+                        <i class="fas fa-check-circle summary-icon"></i>
+                    </div>
+                    <div class="summary-card debt-overdue-count">
+                        <div>
+                            <div class="summary-label">Nợ Quá Hạn</div>
+                            <div class="summary-value" id="debtOverdueCountV2">0</div>
+                        </div>
+                        <i class="fas fa-exclamation-triangle summary-icon"></i>
+                    </div>
+                    <div class="summary-card debt-customer-count">
+                        <div>
+                            <div class="summary-label">Tổng Số Phiếu Nợ</div>
+                            <div class="summary-value" id="debtTotalCountV2">0</div>
+                        </div>
+                        <i class="fas fa-file-invoice-dollar summary-icon"></i>
+                    </div>
+                </div>
+
+                <div class="debt-tabs">
+                    <button class="debt-tab-btn active" data-tab="debtListV2Tab"><i class="fas fa-list-ul"></i> Danh Sách Nợ</button>
+                    <button class="debt-tab-btn" data-tab="debtPaymentV2Tab"><i class="fas fa-money-bill-wave"></i> Ghi Thanh Toán</button>
+                </div>
+
+                <div id="debtListV2Tab" class="debt-tab-content active">
+                    <div class="debt-filters-v2">
+                        <div class="debt-search-v2">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="debtSearchInputV2" placeholder="Tìm theo tên KH, sản phẩm...">
+                        </div>
+                        <div class="debt-status-filter-v2">
+                            <i class="fas fa-filter"></i>
+                            <select id="debtStatusFilterV2">
+                                <option value="all">Tất cả trạng thái</option>
+                                <option value="pending">Chờ thanh toán</option>
+                                <option value="overdue">Quá hạn</option>
+                                <option value="paid">Đã thanh toán</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="debtListContainerV2" class="debt-list-v2">
+                        <!-- Debt cards will be rendered here -->
+                    </div>
+                    <div class="no-debts-v2" style="display: none;">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <p>Chưa có khoản nợ nào.</p>
+                    </div>
+                </div>
+
+                <div id="debtPaymentV2Tab" class="debt-tab-content">
+                    <div class="debt-payment-form-container">
+                        <h2>Ghi Nhận Thanh Toán Nợ</h2>
+                        <form id="debtPaymentFormV2">
+                            <div class="form-group">
+                                <label for="debtPaymentSelectV2">Chọn Khoản Nợ <span class="required">*</span></label>
+                                <select id="debtPaymentSelectV2" required>
+                                    <option value="">-- Chọn khách hàng --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="debtPaymentAmountV2">Số Tiền Thanh Toán <span class="required">*</span></label>
+                                <input type="text" id="debtPaymentAmountV2" class="currency-input" placeholder="Nhập số tiền" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="debtPaymentNoteV2">Ghi Chú Thanh Toán</label>
+                                <textarea id="debtPaymentNoteV2" rows="3" placeholder="Ví dụ: Chuyển khoản, tiền mặt..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Xác Nhận Thanh Toán</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Finance Section -->
+        <section id="financeSection" class="page-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> Quản Lý Tài Chính</h2>
+                <button id="addTransactionBtn" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Thêm Giao Dịch</button>
+            </div>
+            <div class="filters">
+                <div class="filter-group">
+                    <label><i class="fas fa-calendar-alt"></i> Từ ngày:</label>
+                    <input type="date" id="financeDateFromFilter">
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-calendar-alt"></i> Đến ngày:</label>
+                    <input type="date" id="financeDateToFilter">
+                </div>
+                <div class="filter-group">
+                    <label for="financeTypeFilter"><i class="fas fa-exchange-alt"></i> Loại GD:</label>
+                    <select id="financeTypeFilter">
+                        <option value="">Tất cả</option>
+                        <option value="income">Thu</option>
+                        <option value="expense">Chi</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="financeCategoryFilter"><i class="fas fa-tags"></i> Danh mục:</label>
+                    <select id="financeCategoryFilter">
+                        <option value="">Tất cả</option>
+                    </select>
+                </div>
+                <button id="applyFinanceFiltersBtn" class="btn btn-info btn-sm"><i class="fas fa-filter"></i> Lọc</button>
+                <button id="resetFinanceFiltersBtn" class="btn btn-secondary btn-sm"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+            <div class="stats-bar">
+                <div>
+                    <h3>Tóm tắt tài chính (theo bộ lọc):</h3>
+                    <p>Tổng Doanh Thu Bán Hàng: <strong id="totalRevenueDisplay">0đ</strong></p>
+                    <p>Tổng Giá Vốn Hàng Bán: <strong id="totalCOGSDisplay">0đ</strong></p>
+                    <p>Lợi Nhuận Gộp: <strong id="grossProfitDisplay">0đ</strong></p>
+                    <p>Tổng Chi Phí Khác: <strong id="totalOtherExpensesDisplay">0đ</strong></p>
+                    <p>Lợi Nhuận Ròng: <strong id="netProfitDisplay">0đ</strong></p>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="transactionTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Loại</th>
+                            <th>Mô tả</th>
+                            <th>Danh mục</th>
+                            <th>Số tiền</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody">
+                        <!-- Transactions will be rendered here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="no-transactions" style="display: block;">
+                <i class="fas fa-search-dollar" style="font-size: 2.5em; color: #ccc; display: block; margin-bottom: 10px;"></i>
+                <p>Chưa có giao dịch nào. Hãy thêm giao dịch hoặc lọc theo thời gian khác!</p>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reportsSection" class="page-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-pie"></i> Báo Cáo Tổng Quan</h2>
+            </div>
+
+            <div class="dashboard-row">
+                <div class="dashboard-section-title">
+                    <h3><i class="fas fa-store-alt"></i> Báo Cáo Bán Hàng</h3>
+                </div>
+                <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">Doanh Thu Hôm Nay</span>
+                            <span class="stat-value" id="reportSalesTodayRevenue">0đ</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">Doanh Thu Tháng Này</span>
+                            <span class="stat-value" id="reportSalesThisMonthRevenue">0đ</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">Doanh Thu Tháng Trước</span>
+                            <span class="stat-value" id="reportSalesLastMonthRevenue">0đ</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 15px;">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">Tổng Đơn Hàng (Tháng Này)</span>
+                            <span class="stat-value" id="reportSalesTotalOrdersThisMonth">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">Tổng Khách Hàng (Tháng Này)</span>
+                            <span class="stat-value" id="reportSalesTotalCustomersThisMonth">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">Trung Bình/Đơn (Tháng Này)</span>
+                            <span class="stat-value" id="reportSalesAvgOrderValueThisMonth">0đ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <div class="dashboard-section-title">
+                    <h3><i class="fas fa-balance-scale"></i> Báo Cáo Thu Chi</h3>
+                </div>
+                <div class="filters" style="margin-bottom: 15px;">
+                    <div class="filter-group">
+                        <label for="reportFinanceTimeFilter"><i class="fas fa-calendar-check"></i> Chọn kỳ báo cáo:</label>
+                        <select id="reportFinanceTimeFilter">
+                            <option value="today">Hôm nay</option>
+                            <option value="this_week">Tuần này</option>
+                            <option value="this_month" selected>Tháng này</option>
+                            <option value="last_week">Tuần trước</option>
+                            <option value="last_month">Tháng trước</option>
+                            <option value="custom">Tùy chọn</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" id="reportFinanceCustomDateRange" style="display: none;">
+                        <label><i class="fas fa-calendar-alt"></i> Từ:</label>
+                        <input type="date" id="reportFinanceDateFrom">
+                        <label><i class="fas fa-calendar-alt"></i> Đến:</label>
+                        <input type="date" id="reportFinanceDateTo">
+                    </div>
+                     <button id="applyReportFinanceFiltersBtn" class="btn btn-info btn-sm"><i class="fas fa-sync-alt"></i> Xem</button>
+                </div>
+                <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="stat-card success-color">
+                        <div class="stat-info">
+                            <span class="stat-label">Tổng Thu</span>
+                            <span class="stat-value" id="reportFinanceTotalIncome">0đ</span>
+                        </div>
+                    </div>
+                    <div class="stat-card danger-color">
+                        <div class="stat-info">
+                            <span class="stat-label">Tổng Chi</span>
+                            <span class="stat-value" id="reportFinanceTotalExpense">0đ</span>
+                        </div>
+                    </div>
+                     <div class="stat-card primary-color">
+                        <div class="stat-info">
+                            <span class="stat-label">Lợi Nhuận (Thu - Chi)</span>
+                            <span class="stat-value" id="reportFinanceNetProfit">0đ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="no-reports" style="display: none;">
+                <i class="fas fa-chart-bar"></i>
+                <p>Chưa có đủ dữ liệu để tạo báo cáo.</p>
+            </div>
+        </section>
+
+        <!-- Invoice Settings Section -->
+        <section id="invoiceSettingsSection" class="page-section">
+            <div class="invoice-customization-layout">
+                <!-- PANEL XEM TRƯỚC (LÊN ĐẦU) -->
+                <div id="invoicePreviewContainer" class="invoice-preview-container">
+                    <h3>
+                        <span>Xem Trước Hóa Đơn</span>
+                        <div>
+                            <button id="toggleInvoiceSettingsPanelBtn" class="btn btn-secondary btn-sm" title="Mở/Đóng Cài đặt Hóa đơn">
+                                <i class="fas fa-cog"></i> <span class="button-text-desktop">Cài đặt</span>
+                            </button>
+                            <button id="printCurrentInvoiceBtn" class="btn btn-primary btn-sm"><i class="fas fa-print"></i> In HĐ</button>
+                            <button id="exportInvoicePNGBtn" class="btn btn-info btn-sm"><i class="fas fa-download"></i> Tải Ảnh HĐ</button>
+                            <button id="copyInvoiceImageBtn" class="btn btn-warning btn-sm"><i class="fas fa-copy"></i> Sao Chép HĐ</button>
+                            <button id="viewFullScreenInvoiceBtn" class="btn btn-secondary btn-sm"><i class="fas fa-expand-arrows-alt"></i> Xem Toàn Màn Hình</button>
+                        </div>
+                    </h3>
+                    <small>Đây là bản xem trước dựa trên đơn hàng mẫu hoặc đơn hàng cuối cùng bạn thao tác. Một số thông tin (như "Khách đã trả", "Tổng nợ") sẽ hiển thị chính xác hơn khi áp dụng cho đơn hàng thực tế.</small>
+
+                    <div id="invoicePreviewArea" class="invoice-paper template-custom-layout">
+                        <!-- Header -->
+                        <div class="invoice-header-centered">
+                            <div id="invoiceLogoWrapperPreview" class="invoice-logo-centered-wrapper">
+                                <img id="invoicePreviewActualLogo" src="#" alt="Logo Cửa Hàng" style="display:none;">
+                            </div>
+                            <h2 id="invoiceStoreNamePreview" class="invoice-store-name-preview">Tên Cửa Hàng Của Bạn</h2>
+                            <p id="invoiceStoreAddressPreviewContainer" class="invoice-store-address-preview">123 Đường ABC, Quận XYZ, TP. HCM</p>
+                            <p id="invoiceStoreContactPreviewContainer" class="invoice-store-contact-preview">
+                                <span id="invoiceStorePhoneContainer" class="invoice-store-phone-container">SĐT: <span id="invoiceStorePhonePreview" class="invoice-store-phone-val-preview">0123 456 789</span></span>
+                                <span id="invoiceStoreEmailContainer" class="invoice-store-email-container"> - Email: <span id="invoiceStoreEmailPreview" class="invoice-store-email-val-preview">cuahang@example.com</span></span>
+                            </p>
+                            <p id="invoiceStoreWebsitePreviewContainer" class="invoice-store-website-preview" style="display:none;">
+                                Website: <a href="#" id="invoiceStoreWebsiteValPreview" target="_blank">www.cuahang.com</a>
+                            </p>
+                        </div>
+
+                        <!-- Invoice Title -->
+                        <div id="invoiceTitleSectionPreview" class="invoice-title-section">
+                            <h3 id="invoiceTitleTextPreview">HÓA ĐƠN BÁN HÀNG</h3>
+                            <p>Mã ĐH: <span id="invoicePreviewOrderId">#SAMPLE123</span></p>
+                            <p>Ngày: <span id="invoicePreviewOrderDate">01/01/2024 10:00</span></p>
+                        </div>
+
+                        <hr class="invoice-separator-light">
+
+                        <!-- Customer Details -->
+                        <div id="invoiceCustomerDetailsPreview" class="invoice-customer-details-left">
+                            <p id="invoiceCustomerNameContainerPreview"><strong>Khách hàng:</strong> <span id="invoicePreviewCustomerName">Khách Hàng Mẫu</span></p>
+                            <p id="invoiceCustomerPhoneContainerPreview"><strong>Điện thoại:</strong> <span id="invoicePreviewCustomerPhone">0987654321</span></p>
+                            <p id="invoiceCustomerAddressContainerPreview"><strong>Địa chỉ:</strong> <span id="invoicePreviewCustomerAddress">123 Đường Mẫu, TP Mẫu</span></p>
+                            <p id="invoiceCustomerEmailContainerPreview" style="display:none;"><strong>Email:</strong> <span id="invoicePreviewCustomerEmailVal">mau@example.com</span></p>
+                        </div>
+
+                        <!-- Order Notes -->
+                        <div id="invoiceOrderNotesSectionPreview" style="display:none;">
+                            <p><strong>Ghi chú đơn hàng:</strong> <span id="invoicePreviewOrderNotes">Giao hàng cẩn thận.</span></p>
+                             <hr class="invoice-separator-light">
+                        </div>
+
+
+                        <!-- Items List (Vertical) -->
+                        <div id="invoiceItemsListVerticalPreview" class="invoice-items-list-vertical">
+                            <div class="invoice-items-header-vertical">
+                                <span>Tên sản phẩm</span>
+                                <span>Thành tiền</span>
+                            </div>
+                            <div id="invoicePreviewItemsBodyVertical">
+                                <!-- Sample Item 1 -->
+                                <div class="invoice-item-vertical">
+                                    <div class="item-main-info">
+                                        <span class="item-name">Sản phẩm A <small class="item-sku-preview">(SKU: SP-A)</small></span>
+                                        <span class="item-total-value">300.000đ</span>
+                                    </div>
+                                    <div class="item-sub-details">
+                                        <span class="item-unit-price-preview">Đ.Giá: 150.000đ</span>
+                                        <span>SL: 2</span>
+                                    </div>
+                                </div>
+                                <!-- Sample Item 2 -->
+                                <div class="invoice-item-vertical">
+                                    <div class="item-main-info">
+                                        <span class="item-name">Sản phẩm B (mô tả dài) <small class="item-sku-preview">(SKU: SP-B-002)</small></span>
+                                        <span class="item-total-value">240.000đ</span>
+                                    </div>
+                                    <div class="item-sub-details">
+                                        <span class="item-unit-price-preview">Đ.Giá: 250.000đ</span>
+                                        <span>SL: 1</span>
+                                        <span class="item-discount-preview" style="display:none;">Giảm SP: 10.000đ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Summary -->
+                        <div id="invoiceSummaryCustomPreview" class="invoice-summary-custom">
+                            <div class="summary-line">
+                                <span>Tổng tiền hàng:</span>
+                                <span id="invoicePreviewSubtotal">540.000đ</span>
+                            </div>
+                            <div class="summary-line">
+                                <span>Giảm giá ĐH:</span>
+                                <span id="invoicePreviewOrderDiscount">50.000đ</span>
+                            </div>
+                            <div class="summary-line">
+                                <span>Phí vận chuyển:</span>
+                                <span id="invoicePreviewShippingFee">30.000đ</span>
+                            </div>
+                             <div id="invoiceAmountPaidContainerPreview" class="summary-line" style="display:none;">
+                                <span>Khách đã trả:</span>
+                                <span id="invoicePreviewAmountPaid">0đ</span>
+                            </div>
+                            <div class="summary-line total-line">
+                                <span>TỔNG CỘNG:</span>
+                                <span id="invoicePreviewTotalAmount">520.000đ</span>
+                            </div>
+                            <div id="invoiceTotalDebtContainerPreview" class="summary-line" style="font-weight: bold; color: var(--danger-color); display:none;">
+                                <span>Còn lại (Nợ):</span>
+                                <span id="invoicePreviewTotalDebt">0đ</span>
+                            </div>
+                        </div>
+
+                        <!-- Payment Info / Store Note -->
+                        <div id="invoiceStoreNoteSectionPreview" class="invoice-payment-info">
+                            <strong>Thông tin thanh toán/Ghi chú:</strong>
+                            <p id="invoicePreviewStoreNoteText">STK: 123456789, Ngân hàng ABC, Chủ TK: Nguyễn Văn A. Nội dung: TT MaDonHang</p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div id="invoiceFooterCustomPreview" class="invoice-footer-custom">
+                            <p class="invoice-custom-message-preview">Cảm ơn quý khách đã tin tưởng và mua sắm tại cửa hàng!</p>
+                            <p class="invoice-branding-footer">Hóa đơn được tạo bởi Quản Lý Bán Hàng Mini</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL CÀI ĐẶT -->
+                <div id="invoiceSettingsPanel" class="invoice-settings-panel">
+                    <button class="close-settings-panel-btn" title="Đóng cài đặt">×</button>
+                    <h3>Cài Đặt Hiển Thị Hóa Đơn</h3>
+                    <fieldset>
+                        <legend>Kiểu Hiển Thị Sản Phẩm</legend>
+                        <div class="form-group">
+                            <label for="invoiceItemDisplayStyle">Kiểu hiển thị:</label>
+                            <select id="invoiceItemDisplayStyle">
+                                <option value="lines">Đường kẻ ngăn cách</option>
+                                <option value="boxed">Đóng khung từng sản phẩm</option>
+                            </select>
+                        </div>
+                         <div class="form-group">
+                            <label for="invoiceFontSize">Cỡ chữ hóa đơn:</label>
+                            <select id="invoiceFontSize">
+                                <option value="10px">Nhỏ (10px)</option>
+                                <option value="11px">Vừa (11px)</option>
+                                <option value="12px">Lớn (12px)</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Thông Tin Chung</legend>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowLogoCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowLogoCheckbox" class="form-check-label">Hiển thị Logo cửa hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceStoreLogoUpload">Tải lên Logo:</label>
+                            <input type="file" id="invoiceStoreLogoUpload" accept="image/*">
+                            <img id="invoiceLogoPreview" src="#" alt="Xem trước logo" style="max-width: 100px; max-height: 100px; margin-top: 5px; display: none; border-radius: 50%;">
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceLogoSize">Kích thước Logo:</label>
+                            <select id="invoiceLogoSize">
+                                <option value="50px">Nhỏ (50px)</option>
+                                <option value="75px" selected>Vừa (75px)</option>
+                                <option value="100px">Lớn (100px)</option>
+                                <option value="120px">Rất Lớn (120px)</option>
+                            </select>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowInvoiceTitleCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowInvoiceTitleCheckbox" class="form-check-label">Hiển thị Tiêu đề hóa đơn</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceTitleText">Nội dung tiêu đề:</label>
+                            <input type="text" id="invoiceTitleText" value="HÓA ĐƠN BÁN HÀNG">
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label for="invoiceStoreName">Tên cửa hàng:</label>
+                            <input type="text" id="invoiceStoreName" placeholder="Tên cửa hàng của bạn">
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowStoreAddressCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowStoreAddressCheckbox" class="form-check-label">Hiển thị Địa chỉ cửa hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceStoreAddress">Địa chỉ cửa hàng:</label>
+                            <textarea id="invoiceStoreAddress" rows="2" placeholder="Địa chỉ chi tiết"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowStorePhoneCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowStorePhoneCheckbox" class="form-check-label">Hiển thị SĐT cửa hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceStorePhone">SĐT cửa hàng:</label>
+                            <input type="tel" id="invoiceStorePhone" placeholder="Số điện thoại">
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowStoreEmailCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowStoreEmailCheckbox" class="form-check-label">Hiển thị Email cửa hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceStoreEmail">Email cửa hàng:</label>
+                            <input type="email" id="invoiceStoreEmail" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowStoreWebsiteCheckbox" class="form-check-input">
+                            <label for="invoiceShowStoreWebsiteCheckbox" class="form-check-label">Hiển thị Website cửa hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceStoreWebsite">Website cửa hàng:</label>
+                            <input type="text" id="invoiceStoreWebsite" placeholder="Địa chỉ website">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Thông Tin Khách Hàng</legend>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowCustomerNameCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowCustomerNameCheckbox" class="form-check-label">Hiển thị Tên khách hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowCustomerPhoneCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowCustomerPhoneCheckbox" class="form-check-label">Hiển thị SĐT khách hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowCustomerAddressCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowCustomerAddressCheckbox" class="form-check-label">Hiển thị Địa chỉ khách hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowCustomerEmailCheckbox" class="form-check-input">
+                            <label for="invoiceShowCustomerEmailCheckbox" class="form-check-label">Hiển thị Email khách hàng</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Thông Tin Đơn Hàng</legend>
+                         <div class="form-group">
+                            <input type="checkbox" id="invoiceShowOrderIdCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowOrderIdCheckbox" class="form-check-label">Hiển thị Mã Đơn Hàng</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowOrderNotesCheckbox" class="form-check-input">
+                            <label for="invoiceShowOrderNotesCheckbox" class="form-check-label">Hiển thị Ghi chú đơn hàng (của shop)</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Thông Tin Sản Phẩm</legend>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowItemPriceCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowItemPriceCheckbox" class="form-check-label">Hiển thị Giá bán (đơn giá) từng sản phẩm</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowSKUCheckbox" class="form-check-input">
+                            <label for="invoiceShowSKUCheckbox" class="form-check-label">Hiển thị SKU sản phẩm</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowItemDiscountCheckbox" class="form-check-input">
+                            <label for="invoiceShowItemDiscountCheckbox" class="form-check-label">Hiển thị Giảm giá (nếu có) cho từng sản phẩm</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Thông Tin Thanh Toán</legend>
+                         <div class="form-group">
+                            <input type="checkbox" id="invoiceShowAmountPaidCheckbox" class="form-check-input">
+                            <label for="invoiceShowAmountPaidCheckbox" class="form-check-label">Hiển thị "Khách đã trả"</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowTotalDebtCheckbox" class="form-check-input">
+                            <label for="invoiceShowTotalDebtCheckbox" class="form-check-label">Hiển thị "Tổng cộng nợ" (nếu có)</label>
+                        </div>
+                         <div class="form-group">
+                            <label for="invoiceTotalAmountColor">Màu chữ Tổng Cộng:</label>
+                            <input type="color" id="invoiceTotalAmountColor" value="#DC3545">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Thông Tin Thêm & Chân Hóa Đơn</legend>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowStoreNoteCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowStoreNoteCheckbox" class="form-check-label">Hiển thị Ghi chú cửa hàng (VD: Thông tin chuyển khoản)</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceStoreNoteText">Nội dung ghi chú cửa hàng:</label>
+                            <textarea id="invoiceStoreNoteText" rows="3" placeholder="Ví dụ: STK: 12345, Ngân hàng ABC, Chủ TK: XYZ..."></textarea>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <input type="checkbox" id="invoiceShowInvoiceFooterCheckbox" class="form-check-input" checked>
+                            <label for="invoiceShowInvoiceFooterCheckbox" class="form-check-label">Hiển thị Chân hóa đơn</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceCustomMessage">Nội dung chân hóa đơn:</label>
+                            <textarea id="invoiceCustomMessage" rows="2" placeholder="Cảm ơn quý khách..."></textarea>
+                        </div>
+                    </fieldset>
+
+                    <h4>Màu Sắc & Font Chữ (Chung)</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="invoicePrimaryColor">Màu chủ đạo:</label>
+                            <input type="color" id="invoicePrimaryColor" value="#007bff">
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceSecondaryColor">Màu chữ phụ:</label>
+                            <input type="color" id="invoiceSecondaryColor" value="#333333">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoiceFontFamily">Font chữ:</label>
+                        <select id="invoiceFontFamily">
+                            <option value="'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif">Roboto</option>
+                            <option value="'Helvetica Neue', Helvetica, Arial, sans-serif">Helvetica Neue</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                            <option value="'Courier New', Courier, monospace">Courier New</option>
+                        </select>
+                    </div>
+                     <button id="saveInvoiceSettingsBtn" class="btn btn-success" style="width: 100%; margin-top: 10px;"><i class="fas fa-save"></i> Lưu Cài Đặt Hóa Đơn</button>
+                </div>
+            </div>
+        </section>
+
+    </div> <!-- End .container -->
+
+    <!-- Modals: injected dynamically by js/boot-loader.js from /modals/*.html -->
+    <div id="modalsRoot"></div>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast">
+        <i id="toastIcon" class="fas fa-check-circle toast-icon"></i>
+        <span id="toastMessage" class="toast-message"></span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Supabase: đăng nhập/đăng ký + đồng bộ dữ liệu theo tài khoản -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/cloud-sync.js"></script>
+    <script src="js/boot-loader.js"></script>
+    <script src="js/auth.js"></script>
+</body>
